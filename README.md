@@ -188,13 +188,13 @@ Follow these steps to get the project running on your local machine:
 
 ```bash
 # Clone via HTTPS
-git clone https://github.com/[your-username]/product-management-app.git
+git clone https://github.com/[your-username]/Product-Management.git
 
 # Or clone via SSH
-git clone git@github.com:[your-username]/product-management-app.git
+git clone git@github.com:[your-username]/Product-Management.git
 
 # Navigate to project directory
-cd product-management-app
+cd Product-Management
 ```
 
 ### 2. Install Dependencies
@@ -305,7 +305,7 @@ npm run start
 The project follows a clean, modular architecture with clear separation of concerns:
 
 ```
-product-management-app/
+Product-Management/
 │
 ├── 📁 app/                              # Next.js 15 App Router
 │   ├── 📁 dashboard/                   # Protected dashboard routes
@@ -1193,10 +1193,10 @@ CMD ["node", "server.js"]
 
 ```bash
 # Build Docker image
-docker build -t product-management-app .
+docker build -t product-management .
 
 # Run container
-docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL=https://api.bitechx.com product-management-app
+docker run -p 3000:3000 -e NEXT_PUBLIC_API_URL=https://api.bitechx.com product-management
 ```
 
 ---
@@ -1476,8 +1476,8 @@ Contributions are welcome! Please follow these guidelines:
 2. **Clone your fork**
 
    ```bash
-   git clone https://github.com/YOUR_USERNAME/product-management-app.git
-   cd product-management-app
+   git clone https://github.com/YOUR_USERNAME/Product-Management.git
+   cd Product-Management
    ```
 
 3. **Create a feature branch**
@@ -1579,7 +1579,7 @@ Contributions are welcome! Please follow these guidelines:
 
 If you find this project helpful, please consider giving it a star!
 
-[![GitHub stars](https://img.shields.io/github/stars/aansourav/product-management-app?style=social)](https://github.com/aansourav/product-management-app/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/aansourav/Product-Management?style=social)](https://github.com/aansourav/Product-Management/stargazers)
 
 ---
 
