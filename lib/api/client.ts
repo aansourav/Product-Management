@@ -1,61 +1,61 @@
-const API_BASE_URL = "https://api.bitechx.com"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface ApiResponse<T> {
-  data?: T
-  error?: string
-  status: number
+  data?: T;
+  error?: string;
+  status: number;
 }
 
 class ApiClient {
-  private baseURL: string
-  private token: string | null = null
+  private baseURL: string;
+  private token: string | null = null;
 
   constructor(baseURL: string) {
-    this.baseURL = baseURL
+    this.baseURL = baseURL;
   }
 
   setToken(token: string) {
-    this.token = token
+    this.token = token;
   }
 
   clearToken() {
-    this.token = null
+    this.token = null;
   }
 
   private getHeaders(): HeadersInit {
     const headers: HeadersInit = {
       "Content-Type": "application/json",
-    }
+    };
 
     if (this.token) {
-      headers["Authorization"] = `Bearer ${this.token}`
+      headers["Authorization"] = `Bearer ${this.token}`;
     }
 
-    return headers
+    return headers;
   }
 
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
-    const status = response.status
+    const status = response.status;
 
     try {
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
         return {
           error: data.message || "An error occurred",
           status,
-        }
+        };
       }
 
       return {
         data,
         status,
-      }
+      };
     } catch (error) {
       return {
         error: "Failed to parse response",
         status,
-      }
+      };
     }
   }
 
@@ -64,14 +64,14 @@ class ApiClient {
       const response = await fetch(`${this.baseURL}${endpoint}`, {
         method: "GET",
         headers: this.getHeaders(),
-      })
+      });
 
-      return this.handleResponse<T>(response)
+      return this.handleResponse<T>(response);
     } catch (error) {
       return {
         error: "Network error occurred",
         status: 0,
-      }
+      };
     }
   }
 
@@ -81,14 +81,14 @@ class ApiClient {
         method: "POST",
         headers: this.getHeaders(),
         body: body ? JSON.stringify(body) : undefined,
-      })
+      });
 
-      return this.handleResponse<T>(response)
+      return this.handleResponse<T>(response);
     } catch (error) {
       return {
         error: "Network error occurred",
         status: 0,
-      }
+      };
     }
   }
 
@@ -98,14 +98,14 @@ class ApiClient {
         method: "PUT",
         headers: this.getHeaders(),
         body: body ? JSON.stringify(body) : undefined,
-      })
+      });
 
-      return this.handleResponse<T>(response)
+      return this.handleResponse<T>(response);
     } catch (error) {
       return {
         error: "Network error occurred",
         status: 0,
-      }
+      };
     }
   }
 
@@ -115,16 +115,16 @@ class ApiClient {
         method: "DELETE",
         headers: this.getHeaders(),
         body: body ? JSON.stringify(body) : undefined,
-      })
+      });
 
-      return this.handleResponse<T>(response)
+      return this.handleResponse<T>(response);
     } catch (error) {
       return {
         error: "Network error occurred",
         status: 0,
-      }
+      };
     }
   }
 }
 
-export const apiClient = new ApiClient(API_BASE_URL)
+export const apiClient = new ApiClient(API_BASE_URL);
