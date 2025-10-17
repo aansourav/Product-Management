@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,13 +14,26 @@ import { Label } from "@/components/ui/label";
 import { pageVariants, scaleVariants } from "@/lib/animations";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { login } from "@/lib/store/slices/auth-slice";
+import { useFormik } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import { Package } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import * as Yup from "yup";
+
+// Validation Schema using Yup
+const loginValidationSchema = Yup.object().shape({
+  email: Yup.string()
+    .trim()
+    .required("Email is required")
+    .email("Please enter a valid email address")
+    .matches(
+      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+      "Please enter a valid email address"
+    ),
+});
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { loading, error, isAuthenticated } = useAppSelector(
@@ -35,12 +46,32 @@ export default function LoginPage() {
     }
   }, [isAuthenticated, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      await dispatch(login(email));
-    }
-  };
+  // Initialize Formik
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+    },
+    validationSchema: loginValidationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: false, // Don't validate on mount
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        await dispatch(login(values.email.trim())).unwrap();
+      } catch (err) {
+        // Error is handled by Redux slice
+      } finally {
+        setSubmitting(false);
+      }
+    },
+  });
+
+  // Helper to check if field has error
+  const hasEmailError = Boolean(formik.touched.email && formik.errors.email);
+  const emailError =
+    formik.touched.email && formik.errors.email
+      ? String(formik.errors.email)
+      : undefined;
 
   return (
     <motion.div
@@ -58,7 +89,7 @@ export default function LoginPage() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 15 }}
       >
-        <Card className="w-full min-w-xs sm:min-w-lg border-border/50 shadow-2xl backdrop-blur-sm">
+        <Card className="w-full max-w-md min-w-xs sm:min-w-lg border-border/50 shadow-2xl backdrop-blur-sm">
           <CardHeader className="space-y-1 text-center">
             <motion.div
               variants={scaleVariants}
@@ -89,7 +120,11 @@ export default function LoginPage() {
             </motion.div>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form
+              onSubmit={formik.handleSubmit}
+              className="space-y-4"
+              noValidate
+            >
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -99,18 +134,37 @@ export default function LoginPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="admin@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  disabled={loading}
-                  className="transition-all focus:ring-2"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  disabled={loading || formik.isSubmitting}
+                  className={`transition-all focus:ring-2 ${
+                    hasEmailError ? "border-destructive" : ""
+                  }`}
+                  aria-invalid={hasEmailError}
+                  aria-describedby={hasEmailError ? "email-error" : undefined}
                 />
+                <AnimatePresence mode="wait">
+                  {emailError && (
+                    <motion.p
+                      id="email-error"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="text-sm text-destructive break-words"
+                      role="alert"
+                    >
+                      {emailError}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </motion.div>
 
               <AnimatePresence>
-                {error && (
+                {error && !formik.isSubmitting && (
                   <motion.div
                     initial={{ opacity: 0, y: -10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -118,7 +172,9 @@ export default function LoginPage() {
                     transition={{ duration: 0.2 }}
                   >
                     <Alert variant="destructive">
-                      <AlertDescription>{error}</AlertDescription>
+                      <AlertDescription className="break-words whitespace-normal">
+                        {error}
+                      </AlertDescription>
                     </Alert>
                   </motion.div>
                 )}
@@ -128,11 +184,15 @@ export default function LoginPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: formik.isSubmitting ? 1 : 1.02 }}
+                whileTap={{ scale: formik.isSubmitting ? 1 : 0.98 }}
               >
-                <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? (
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={loading || formik.isSubmitting}
+                >
+                  {loading || formik.isSubmitting ? (
                     <>
                       <motion.div
                         animate={{ rotate: 360 }}
