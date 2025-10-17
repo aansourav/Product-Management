@@ -3,75 +3,115 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================
+   CUSTOM BRAND COLORS - Assignment Color Palette
+   ============================================
+   #0d1821 - Rich black (Dark navy)
+   #eff1f3 - Anti-flash white (Light gray)
+   #4e6e5d - Hooker's green (Muted green)
+   #ad8a64 - Lion (Tan/beige)
+   #a44a3f - Chestnut (Reddish brown)
+   ============================================ */
+
 :root {
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.15 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.25 0 0);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.25 0 0);
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.96 0 0);
-  --accent-foreground: oklch(0.25 0 0);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.9 0 0);
-  --input: oklch(0.9 0 0);
-  --ring: oklch(0.25 0 0);
-  --chart-1: oklch(0.6 0.2 40);
-  --chart-2: oklch(0.55 0.15 180);
-  --chart-3: oklch(0.45 0.1 220);
-  --chart-4: oklch(0.75 0.18 80);
-  --chart-5: oklch(0.7 0.16 65);
+  /* Brand Colors */
+  --brand-rich-black: #0d1821;
+  --brand-white: #eff1f3;
+  --brand-green: #4e6e5d;
+  --brand-tan: #ad8a64;
+  --brand-chestnut: #a44a3f;
+
+  /* Light Mode - Using Brand Colors */
+  --background: #eff1f3;
+  --foreground: #0d1821;
+
+  --card: #ffffff;
+  --card-foreground: #0d1821;
+
+  --popover: #ffffff;
+  --popover-foreground: #0d1821;
+
+  --primary: #4e6e5d;
+  --primary-foreground: #eff1f3;
+
+  --secondary: #ad8a64;
+  --secondary-foreground: #0d1821;
+
+  --muted: #e0e3e6;
+  --muted-foreground: #5a6570;
+
+  --accent: #ad8a64;
+  --accent-foreground: #0d1821;
+
+  --destructive: #a44a3f;
+  --destructive-foreground: #eff1f3;
+
+  --border: #d1d5d9;
+  --input: #d1d5d9;
+  --ring: #4e6e5d;
+
+  --chart-1: #4e6e5d;
+  --chart-2: #ad8a64;
+  --chart-3: #a44a3f;
+  --chart-4: #6b8577;
+  --chart-5: #c19f7a;
+
   --radius: 0.5rem;
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0d1821;
+  --sidebar-primary: #4e6e5d;
+  --sidebar-primary-foreground: #eff1f3;
+  --sidebar-accent: #e0e3e6;
+  --sidebar-accent-foreground: #0d1821;
+  --sidebar-border: #d1d5d9;
+  --sidebar-ring: #4e6e5d;
 }
 
 .dark {
-  --background: oklch(0.15 0 0);
-  --foreground: oklch(0.99 0 0);
-  --card: oklch(0.18 0 0);
-  --card-foreground: oklch(0.99 0 0);
-  --popover: oklch(0.18 0 0);
-  --popover-foreground: oklch(0.99 0 0);
-  --primary: oklch(0.99 0 0);
-  --primary-foreground: oklch(0.25 0 0);
-  --secondary: oklch(0.25 0 0);
-  --secondary-foreground: oklch(0.99 0 0);
-  --muted: oklch(0.25 0 0);
-  --muted-foreground: oklch(0.65 0 0);
-  --accent: oklch(0.25 0 0);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.45 0.18 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.25 0 0);
-  --input: oklch(0.25 0 0);
-  --ring: oklch(0.65 0 0);
-  --chart-1: oklch(0.55 0.22 260);
-  --chart-2: oklch(0.65 0.16 160);
-  --chart-3: oklch(0.7 0.17 70);
-  --chart-4: oklch(0.6 0.24 300);
-  --chart-5: oklch(0.62 0.23 15);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Dark Mode - Using Brand Colors */
+  --background: #0d1821;
+  --foreground: #eff1f3;
+
+  --card: #1a2530;
+  --card-foreground: #eff1f3;
+
+  --popover: #1a2530;
+  --popover-foreground: #eff1f3;
+
+  --primary: #6b8577;
+  --primary-foreground: #eff1f3;
+
+  --secondary: #ad8a64;
+  --secondary-foreground: #0d1821;
+
+  --muted: #2a3744;
+  --muted-foreground: #b8bec4;
+
+  --accent: #ad8a64;
+  --accent-foreground: #0d1821;
+
+  --destructive: #c56158;
+  --destructive-foreground: #eff1f3;
+
+  --border: #2a3744;
+  --input: #2a3744;
+  --ring: #6b8577;
+
+  --chart-1: #6b8577;
+  --chart-2: #ad8a64;
+  --chart-3: #c56158;
+  --chart-4: #4e6e5d;
+  --chart-5: #c19f7a;
+
+  --sidebar: #1a2530;
+  --sidebar-foreground: #eff1f3;
+  --sidebar-primary: #6b8577;
+  --sidebar-primary-foreground: #eff1f3;
+  --sidebar-accent: #2a3744;
+  --sidebar-accent-foreground: #eff1f3;
+  --sidebar-border: #2a3744;
+  --sidebar-ring: #6b8577;
 }
 
 @theme inline {
@@ -119,13 +159,13 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
+
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   body {
     @apply bg-background text-foreground;
   }
@@ -195,4 +235,143 @@ select {
 
 .card-hover:hover {
   @apply shadow-lg;
+}
+
+/* ============================================
+   BRAND GRADIENT UTILITIES
+   ============================================ */
+
+/* Primary gradient - Green to Tan */
+.gradient-primary {
+  background: linear-gradient(135deg, #4e6e5d 0%, #6b8577 100%);
+}
+
+.gradient-primary-subtle {
+  background: linear-gradient(
+    135deg,
+    rgba(78, 110, 93, 0.1) 0%,
+    rgba(107, 133, 119, 0.05) 100%
+  );
+}
+
+/* Secondary gradient - Tan to Chestnut */
+.gradient-secondary {
+  background: linear-gradient(135deg, #ad8a64 0%, #c19f7a 100%);
+}
+
+/* Accent gradient - Multiple brand colors */
+.gradient-brand {
+  background: linear-gradient(135deg, #4e6e5d 0%, #ad8a64 50%, #a44a3f 100%);
+}
+
+/* Hero gradient */
+.gradient-hero {
+  background: linear-gradient(135deg, #0d1821 0%, #4e6e5d 100%);
+}
+
+/* Card gradient overlay */
+.gradient-card-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(13, 24, 33, 0) 0%,
+    rgba(13, 24, 33, 0.8) 100%
+  );
+}
+
+/* Subtle background gradient */
+.bg-gradient-subtle {
+  background: linear-gradient(180deg, #eff1f3 0%, #ffffff 100%);
+}
+
+/* ============================================
+   BRAND COLOR UTILITIES
+   ============================================ */
+
+.text-brand-green {
+  color: #4e6e5d;
+}
+
+.text-brand-tan {
+  color: #ad8a64;
+}
+
+.text-brand-chestnut {
+  color: #a44a3f;
+}
+
+.bg-brand-green {
+  background-color: #4e6e5d;
+}
+
+.bg-brand-tan {
+  background-color: #ad8a64;
+}
+
+.bg-brand-chestnut {
+  background-color: #a44a3f;
+}
+
+.border-brand-green {
+  border-color: #4e6e5d;
+}
+
+.border-brand-tan {
+  border-color: #ad8a64;
+}
+
+/* ============================================
+   ENHANCED UI ELEMENTS WITH BRAND COLORS
+   ============================================ */
+
+/* Enhanced focus states */
+:focus-visible {
+  @apply outline-2 outline-offset-2;
+  outline-color: #4e6e5d;
+}
+
+/* Brand button hover effects */
+.btn-brand-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-brand-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(78, 110, 93, 0.2);
+}
+
+/* Brand card with subtle border */
+.card-brand {
+  border: 1px solid rgba(78, 110, 93, 0.1);
+  background: linear-gradient(
+    145deg,
+    #ffffff 0%,
+    rgba(239, 241, 243, 0.5) 100%
+  );
+}
+
+.dark .card-brand {
+  border: 1px solid rgba(107, 133, 119, 0.2);
+  background: linear-gradient(145deg, #1a2530 0%, rgba(42, 55, 68, 0.5) 100%);
+}
+
+/* Brand accent decorative elements */
+.accent-dot {
+  background: linear-gradient(135deg, #4e6e5d, #ad8a64);
+  box-shadow: 0 4px 12px rgba(78, 110, 93, 0.3);
+}
+
+/* Loading spinner with brand colors */
+@keyframes brand-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-brand {
+  border-color: rgba(78, 110, 93, 0.2);
+  border-top-color: #4e6e5d;
+  animation: brand-spin 1s linear infinite;
 }

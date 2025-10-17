@@ -77,7 +77,11 @@ export default function HomePage() {
         variants={pageVariants}
         initial="initial"
         animate="animate"
-        className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background"
+        className="min-h-screen"
+        style={{
+          background:
+            "linear-gradient(135deg, #eff1f3 0%, #ffffff 50%, #e0e3e6 100%)",
+        }}
       >
         {/* Hero Section */}
         <div className="container mx-auto px-4 py-12 sm:py-16 lg:py-20">
@@ -92,7 +96,10 @@ export default function HomePage() {
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ type: "spring", stiffness: 150, damping: 12 }}
-              className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-2xl"
+              className="mx-auto flex h-24 w-24 items-center justify-center rounded-2xl shadow-2xl"
+              style={{
+                background: "linear-gradient(135deg, #4e6e5d 0%, #6b8577 100%)",
+              }}
             >
               <motion.div
                 animate={{
@@ -104,7 +111,7 @@ export default function HomePage() {
                   ease: "easeInOut",
                 }}
               >
-                <Package className="h-12 w-12 text-primary-foreground" />
+                <Package className="h-12 w-12 text-[#eff1f3]" />
               </motion.div>
             </motion.div>
 
@@ -167,7 +174,7 @@ export default function HomePage() {
               transition={{ delay: 0.6 }}
               className="flex items-center justify-center gap-2 text-sm text-muted-foreground"
             >
-              <Shield className="h-4 w-4 text-primary" />
+              <Shield className="h-4 w-4" style={{ color: "#4e6e5d" }} />
               <span>Secure • Fast • Reliable</span>
             </motion.div>
           </motion.div>
@@ -200,14 +207,20 @@ export default function HomePage() {
                   transition={{ delay: 0.9 + index * 0.1 }}
                   whileHover={{ y: -5 }}
                 >
-                  <Card className="h-full border-border/50 hover:border-primary/50 transition-colors">
+                  <Card className="h-full border-border/50 transition-all hover:shadow-lg hover:border-[#4e6e5d]/30">
                     <CardContent className="p-6 space-y-4">
                       <motion.div
                         whileHover={{ scale: 1.1, rotate: 5 }}
                         transition={{ type: "spring", stiffness: 300 }}
-                        className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10"
+                        className="flex h-12 w-12 items-center justify-center rounded-lg"
+                        style={{
+                          background: "rgba(78, 110, 93, 0.1)",
+                        }}
                       >
-                        <feature.icon className="h-6 w-6 text-primary" />
+                        <feature.icon
+                          className="h-6 w-6"
+                          style={{ color: "#4e6e5d" }}
+                        />
                       </motion.div>
                       <div className="space-y-2">
                         <h3 className="font-semibold text-lg">
@@ -233,7 +246,13 @@ export default function HomePage() {
             transition={{ delay: 1.5 }}
             className="mx-auto max-w-3xl"
           >
-            <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+            <Card
+              className="border-border/50"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(78, 110, 93, 0.05) 0%, rgba(173, 138, 100, 0.03) 100%)",
+              }}
+            >
               <CardContent className="p-8 sm:p-10 space-y-6">
                 <div className="text-center space-y-3">
                   <h2 className="text-2xl sm:text-3xl font-bold">
@@ -247,7 +266,13 @@ export default function HomePage() {
 
                 <div className="space-y-4 text-sm">
                   <div className="flex gap-3">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-xs">
+                    <div
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-semibold text-xs"
+                      style={{
+                        background: "#4e6e5d",
+                        color: "#eff1f3",
+                      }}
+                    >
                       1
                     </div>
                     <div>
@@ -259,7 +284,13 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="flex gap-3">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-xs">
+                    <div
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-semibold text-xs"
+                      style={{
+                        background: "#4e6e5d",
+                        color: "#eff1f3",
+                      }}
+                    >
                       2
                     </div>
                     <div>
@@ -271,7 +302,13 @@ export default function HomePage() {
                     </div>
                   </div>
                   <div className="flex gap-3">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground font-semibold text-xs">
+                    <div
+                      className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-semibold text-xs"
+                      style={{
+                        background: "#4e6e5d",
+                        color: "#eff1f3",
+                      }}
+                    >
                       3
                     </div>
                     <div>
@@ -315,7 +352,11 @@ export default function HomePage() {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl"
+            className="absolute -top-1/2 -left-1/2 w-full h-full rounded-full blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(78, 110, 93, 0.15) 0%, transparent 70%)",
+            }}
           />
           <motion.div
             animate={{
@@ -328,7 +369,11 @@ export default function HomePage() {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-primary/20 to-transparent rounded-full blur-3xl"
+            className="absolute -bottom-1/2 -right-1/2 w-full h-full rounded-full blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(173, 138, 100, 0.15) 0%, transparent 70%)",
+            }}
           />
         </div>
       </motion.div>

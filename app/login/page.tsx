@@ -47,7 +47,11 @@ export default function LoginPage() {
       variants={pageVariants}
       initial="initial"
       animate="animate"
-      className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background p-4"
+      className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#eff1f3] via-[#e0e3e6] to-[#eff1f3] p-4"
+      style={{
+        backgroundImage:
+          "linear-gradient(135deg, #eff1f3 0%, #ffffff 50%, #e0e3e6 100%)",
+      }}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
@@ -62,9 +66,12 @@ export default function LoginPage() {
               animate="show"
               whileHover={{ rotate: 360, scale: 1.1 }}
               transition={{ duration: 0.6 }}
-              className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 shadow-lg"
+              className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl shadow-lg"
+              style={{
+                background: "linear-gradient(135deg, #4e6e5d 0%, #6b8577 100%)",
+              }}
             >
-              <Package className="h-7 w-7 text-primary-foreground" />
+              <Package className="h-7 w-7 text-[#eff1f3]" />
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -73,6 +80,8 @@ export default function LoginPage() {
             >
               <CardTitle className="text-balance text-2xl font-bold">
                 Welcome Back
+                <br />
+                Product Management App
               </CardTitle>
               <CardDescription className="text-pretty mt-2">
                 Enter your email to access the admin dashboard

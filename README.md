@@ -197,14 +197,26 @@ product-management-app/
 
 ## 🎨 Design System
 
-### Color Palette
+### Brand Color Palette
 
-Using OKLCH color space for consistent, perceptually uniform colors:
+The application uses a carefully selected color palette for a professional, modern look:
 
-- Primary: Dark neutral (oklch(0.25 0 0))
-- Secondary: Light neutral (oklch(0.96 0 0))
-- Destructive: Red-orange (oklch(0.55 0.22 25))
-- Muted: Light gray (oklch(0.96 0 0))
+| Color                | Hex Code  | Usage                                   |
+| -------------------- | --------- | --------------------------------------- |
+| **Rich Black**       | `#0d1821` | Primary text, dark backgrounds, headers |
+| **Anti-flash White** | `#eff1f3` | Light backgrounds, text on dark         |
+| **Hooker's Green**   | `#4e6e5d` | Primary brand color, buttons, links     |
+| **Lion (Tan)**       | `#ad8a64` | Secondary accents, highlights           |
+| **Chestnut**         | `#a44a3f` | Destructive actions, warnings, delete   |
+
+**Color Application:**
+
+- **Primary:** Hooker's Green (#4e6e5d) - Used for main actions, navigation, focus states
+- **Secondary:** Lion Tan (#ad8a64) - Used for secondary actions, badges, accents
+- **Accent:** Combination of brand colors for gradients
+- **Destructive:** Chestnut (#a44a3f) - Used for delete actions and warnings
+- **Background:** Anti-flash White (#eff1f3) for light mode, Rich Black (#0d1821) for dark mode
+- **Text:** Rich Black for light mode, Anti-flash White for dark mode
 
 ### Typography
 

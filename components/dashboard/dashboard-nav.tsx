@@ -50,11 +50,15 @@ export function DashboardNav() {
               whileTap={{ scale: 0.95 }}
             >
               <motion.div
-                className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-md"
+                className="flex h-8 w-8 items-center justify-center rounded-lg shadow-md"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #4e6e5d 0%, #6b8577 100%)",
+                }}
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
               >
-                <Package className="h-5 w-5 text-primary-foreground" />
+                <Package className="h-5 w-5 text-[#eff1f3]" />
               </motion.div>
               <span className="hidden text-lg font-semibold sm:inline">
                 Product Management
