@@ -18,10 +18,10 @@ export const ProductCardSkeleton = memo(function ProductCardSkeleton({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <Card className="flex h-full flex-col overflow-hidden">
+      <Card className="flex h-full flex-col overflow-hidden p-3">
         <Skeleton className="aspect-[4/3] w-full" />
 
-        <CardContent className="flex-1 px-3 pb-3 pt-0 space-y-2">
+        <CardContent className="flex-1 p-3 space-y-2">
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-3 w-full" />
           <Skeleton className="h-3 w-5/6" />

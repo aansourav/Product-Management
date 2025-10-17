@@ -81,7 +81,7 @@ export function DashboardNav() {
                       size="sm"
                       className={cn(
                         "gap-2 transition-all",
-                        isActive && "bg-secondary"
+                        isActive && "bg-primary-foreground"
                       )}
                     >
                       <Icon className="h-4 w-4" />

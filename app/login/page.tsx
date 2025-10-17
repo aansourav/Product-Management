@@ -14,24 +14,12 @@ import { Label } from "@/components/ui/label";
 import { pageVariants, scaleVariants } from "@/lib/animations";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { login } from "@/lib/store/slices/auth-slice";
+import { loginValidationSchema } from "@/lib/validations/auth";
 import { useFormik } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import { Package } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import * as Yup from "yup";
-
-// Validation Schema using Yup
-const loginValidationSchema = Yup.object().shape({
-  email: Yup.string()
-    .trim()
-    .required("Email is required")
-    .email("Please enter a valid email address")
-    .matches(
-      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-      "Please enter a valid email address"
-    ),
-});
 
 export default function LoginPage() {
   const router = useRouter();
