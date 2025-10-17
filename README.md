@@ -14,6 +14,10 @@
 
 ---
 
+![Product Management App Screenshot](https://i.ibb.co.com/bMxVxb2R/Screenshot-2025-10-17-224049.png)
+
+---
+
 </div>
 
 ## 📖 Table of Contents
@@ -51,8 +55,7 @@ A production-ready, full-featured product management application that demonstrat
 
 ## 🚀 Live Demo
 
-**🌐 Live Application:** [Add your deployment URL here]  
-**📦 GitHub Repository:** [Add your repository URL here]
+### **🌐 Live Application:** [https://product-management-bitechx.vercel.app](https://product-management-bitechx.vercel.app)
 
 **Test Credentials:**
 
@@ -1221,7 +1224,6 @@ npm run build && npm run start
 - 🟢 Performance: 90+
 - 🟢 Accessibility: 95+
 - 🟢 Best Practices: 95+
-- 🟢 SEO: 100
 
 **Bundle Size:**
 
@@ -1494,7 +1496,6 @@ Contributions are welcome! Please follow these guidelines:
 | Error Handling    | 🟢 100%  |
 | Loading States    | 🟢 100%  |
 | Animations        | 🟢 100%  |
-| Testing           | 🔴 0%    |
 | Documentation     | 🟢 100%  |
 
 ### Roadmap / Future Enhancements
@@ -1514,50 +1515,14 @@ Contributions are welcome! Please follow these guidelines:
 
 ---
 
-## 📄 License
-
-This project is developed as part of a job application assignment.
-
-**Copyright © 2025 [Your Name]**
-
-For licensing inquiries, please contact: [Your Email]
-
----
-
 ## 👤 Author
 
-**[Your Full Name]**
+**Abdullah An-Noor**
 
-- 📧 Email: [your.email@example.com]
-- 💼 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
-- 🐙 GitHub: [@yourusername](https://github.com/yourusername)
-- 🌐 Portfolio: [yourportfolio.com](https://yourportfolio.com)
-- 🐦 Twitter: [@yourhandle](https://twitter.com/yourhandle)
-
----
-
-## 🙏 Acknowledgments
-
-This project was built using amazing open-source technologies:
-
-- **[Next.js](https://nextjs.org/)** - The React Framework for Production
-- **[React](https://react.dev/)** - JavaScript library for building UIs
-- **[Redux Toolkit](https://redux-toolkit.js.org/)** - The official, opinionated Redux toolset
-- **[Tailwind CSS](https://tailwindcss.com/)** - A utility-first CSS framework
-- **[shadcn/ui](https://ui.shadcn.com/)** - Beautifully designed components
-- **[Radix UI](https://www.radix-ui.com/)** - Unstyled, accessible component primitives
-- **[Framer Motion](https://www.framer.com/motion/)** - Production-ready animation library
-- **[Formik](https://formik.org/)** - Build forms in React, without tears
-- **[Yup](https://github.com/jquense/yup)** - Schema validation
-- **[Axios](https://axios-http.com/)** - Promise-based HTTP client
-- **[Lucide Icons](https://lucide.dev/)** - Beautiful & consistent icon toolkit
-- **[Vercel](https://vercel.com/)** - Platform for frontend frameworks
-
-**Special Thanks:**
-
-- The Next.js team for excellent documentation
-- The React community for incredible ecosystem
-- All open-source contributors
+- 📧 Email: aansourav@gmail.com
+- 💼 LinkedIn: [linkedin.com/in/aansourav](https://linkedin.com/in/aansourav)
+- 🐙 GitHub: [@aansourav](https://github.com/aansourav)
+- 🌐 Portfolio: [aansourav.vercel.app](https://aansourav.vercel.app)
 
 ---
 
@@ -1567,10 +1532,10 @@ This project was built using amazing open-source technologies:
 
 If you find this project helpful, please consider giving it a star!
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/product-management-app?style=social)](https://github.com/yourusername/product-management-app/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/aansourav/product-management-app?style=social)](https://github.com/aansourav/product-management-app/stargazers)
 
 ---
 
-**Built with ❤️ and ☕ using Next.js 15**
+**Built with ❤️ and ☕ by [Abdullah An-Noor](https://linkedin.com/in/aansourav)**
 
 </div>
