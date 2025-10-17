@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchCategories } from "@/lib/store/slices/categories-slice";
 import {
+  clearError,
   createProduct,
   updateProduct,
 } from "@/lib/store/slices/products-slice";
@@ -36,6 +37,11 @@ export function ProductForm({ mode, product }: ProductFormProps) {
   // Fetch categories on mount
   useEffect(() => {
     dispatch(fetchCategories());
+  }, [dispatch]);
+
+  // Clear any existing errors on mount to prevent stale errors from previous pages
+  useEffect(() => {
+    dispatch(clearError());
   }, [dispatch]);
 
   // Initialize Formik
