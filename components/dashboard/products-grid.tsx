@@ -18,7 +18,7 @@ export function ProductsGrid({ products, loading }: ProductsGridProps) {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="grid gap-4 grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4"
+        className="grid gap-2 grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4"
       >
         {Array.from({ length: 8 }).map((_, index) => (
           <ProductCardSkeleton key={index} index={index} />
