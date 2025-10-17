@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { AnimatePresence, motion } from "motion/react";
-import { ProductForm } from "@/components/products/product-form"
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { pageVariants } from "@/lib/animations"
+import { ProductForm } from "@/components/products/product-form";
+import { Button } from "@/components/ui/button";
+import { pageVariants } from "@/lib/animations";
+import { ArrowLeft } from "lucide-react";
+import { motion } from "motion/react";
+import Link from "next/link";
 
 export default function NewProductPage() {
   return (
@@ -51,5 +51,5 @@ export default function NewProductPage() {
 
       <ProductForm mode="create" />
     </motion.div>
-  )
+  );
 }
