@@ -1,11 +1,11 @@
 "use client";
 
-import { Loader2, Package } from "lucide-react";
+import { Loader2, LogIn } from "lucide-react";
 import { motion } from "motion/react";
 
-export default function DashboardLoading() {
+export default function LoginLoading() {
   return (
-    <div className="flex min-h-[60vh] items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -16,16 +16,15 @@ export default function DashboardLoading() {
         <motion.div
           animate={{
             scale: [1, 1.1, 1],
-            rotate: [0, 5, -5, 0],
           }}
           transition={{
             duration: 2,
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="relative flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 shadow-lg"
+          className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-lg"
         >
-          <Package className="h-8 w-8 text-primary-foreground" />
+          <LogIn className="h-10 w-10 text-primary-foreground" />
 
           {/* Pulse effect */}
           <motion.div
@@ -38,7 +37,7 @@ export default function DashboardLoading() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute inset-0 rounded-xl bg-primary"
+            className="absolute inset-0 rounded-2xl bg-primary"
           />
         </motion.div>
 
@@ -61,27 +60,10 @@ export default function DashboardLoading() {
           transition={{ delay: 0.2 }}
           className="text-center space-y-2"
         >
-          <p className="font-semibold text-foreground">Loading Dashboard...</p>
-          <p className="text-sm text-muted-foreground">Please wait</p>
-        </motion.div>
-
-        {/* Animated dots */}
-        <motion.div className="flex gap-2">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              animate={{
-                scale: [1, 1.5, 1],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                delay: i * 0.2,
-              }}
-              className="h-2 w-2 rounded-full bg-primary"
-            />
-          ))}
+          <p className="text-lg font-semibold text-foreground">
+            Authenticating...
+          </p>
+          <p className="text-sm text-muted-foreground">Please wait a moment</p>
         </motion.div>
       </motion.div>
     </div>

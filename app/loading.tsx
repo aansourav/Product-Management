@@ -3,9 +3,9 @@
 import { Loader2, Package } from "lucide-react";
 import { motion } from "motion/react";
 
-export default function DashboardLoading() {
+export default function Loading() {
   return (
-    <div className="flex min-h-[60vh] items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -23,9 +23,9 @@ export default function DashboardLoading() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="relative flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 shadow-lg"
+          className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-lg"
         >
-          <Package className="h-8 w-8 text-primary-foreground" />
+          <Package className="h-10 w-10 text-primary-foreground" />
 
           {/* Pulse effect */}
           <motion.div
@@ -38,7 +38,7 @@ export default function DashboardLoading() {
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="absolute inset-0 rounded-xl bg-primary"
+            className="absolute inset-0 rounded-2xl bg-primary"
           />
         </motion.div>
 
@@ -61,8 +61,8 @@ export default function DashboardLoading() {
           transition={{ delay: 0.2 }}
           className="text-center space-y-2"
         >
-          <p className="font-semibold text-foreground">Loading Dashboard...</p>
-          <p className="text-sm text-muted-foreground">Please wait</p>
+          <p className="text-lg font-semibold text-foreground">Loading...</p>
+          <p className="text-sm text-muted-foreground">Please wait a moment</p>
         </motion.div>
 
         {/* Animated dots */}

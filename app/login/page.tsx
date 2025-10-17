@@ -54,7 +54,7 @@ export default function LoginPage() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", stiffness: 100, damping: 15 }}
       >
-        <Card className="w-full min-w-lg border-border/50 shadow-2xl backdrop-blur-sm">
+        <Card className="w-full min-w-xs sm:min-w-lg border-border/50 shadow-2xl backdrop-blur-sm">
           <CardHeader className="space-y-1 text-center">
             <motion.div
               variants={scaleVariants}
