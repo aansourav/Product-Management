@@ -5,14 +5,16 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { ReduxProvider } from "@/lib/providers/redux-provider"
 import { Toaster } from "@/components/ui/toaster"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Product Management",
-  description: "Manage your products efficiently",
+  title: "Product Management - Admin Dashboard",
+  description: "Manage your products efficiently with modern dashboard",
   generator: "v0.app",
+  keywords: "product management, inventory, admin dashboard",
 }
 
 export default function RootLayout({
@@ -21,12 +23,14 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased`}>
-        <ReduxProvider>
-          {children}
-          <Toaster />
-        </ReduxProvider>
+        <ErrorBoundary>
+          <ReduxProvider>
+            {children}
+            <Toaster />
+          </ReduxProvider>
+        </ErrorBoundary>
         <Analytics />
       </body>
     </html>

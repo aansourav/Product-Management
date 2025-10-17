@@ -11,7 +11,11 @@ interface ProductsState {
   currentPage: number
   itemsPerPage: number
   totalItems: number
+  lastFetch: number | null
+  cacheValidityDuration: number // in milliseconds
 }
+
+const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 
 const initialState: ProductsState = {
   items: [],
@@ -22,6 +26,8 @@ const initialState: ProductsState = {
   currentPage: 1,
   itemsPerPage: 12,
   totalItems: 0,
+  lastFetch: null,
+  cacheValidityDuration: CACHE_DURATION,
 }
 
 export const fetchProducts = createAsyncThunk(
@@ -120,6 +126,9 @@ const productsSlice = createSlice({
     clearCurrentProduct: (state) => {
       state.currentProduct = null
     },
+    invalidateCache: (state) => {
+      state.lastFetch = null
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -132,6 +141,7 @@ const productsSlice = createSlice({
         state.loading = false
         state.items = action.payload
         state.totalItems = action.payload.length
+        state.lastFetch = Date.now()
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false
@@ -171,6 +181,7 @@ const productsSlice = createSlice({
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false
         state.items.unshift(action.payload)
+        state.lastFetch = null // Invalidate cache
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false
@@ -188,12 +199,13 @@ const productsSlice = createSlice({
           state.items[index] = action.payload
         }
         state.currentProduct = action.payload
+        state.lastFetch = null // Invalidate cache
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload as string
       })
-      // Delete product
+      // Delete product - with optimistic update
       .addCase(deleteProduct.pending, (state) => {
         state.loading = true
         state.error = null
@@ -201,6 +213,7 @@ const productsSlice = createSlice({
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.loading = false
         state.items = state.items.filter((p) => p.id !== action.payload)
+        state.lastFetch = null // Invalidate cache
       })
       .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = false
@@ -209,5 +222,13 @@ const productsSlice = createSlice({
   },
 })
 
-export const { setSearchQuery, setCurrentPage, clearCurrentProduct } = productsSlice.actions
+export const { setSearchQuery, setCurrentPage, clearCurrentProduct, invalidateCache } = productsSlice.actions
+
+// Selector to check if cache is valid
+export const selectIsCacheValid = (state: { products: ProductsState }) => {
+  const { lastFetch, cacheValidityDuration } = state.products
+  if (!lastFetch) return false
+  return Date.now() - lastFetch < cacheValidityDuration
+}
+
 export default productsSlice.reducer

@@ -2,8 +2,9 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks"
 import { createProduct, updateProduct } from "@/lib/store/slices/products-slice"
 import { fetchCategories } from "@/lib/store/slices/categories-slice"
@@ -17,6 +18,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { ImageUpload } from "@/components/products/image-upload"
 import { useToast } from "@/hooks/use-toast"
+import { fadeInVariants } from "@/lib/animations"
 
 interface ProductFormProps {
   mode: "create" | "edit"
@@ -44,7 +46,7 @@ export function ProductForm({ mode, product }: ProductFormProps) {
     dispatch(fetchCategories())
   }, [dispatch])
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     const errors: Record<string, string> = {}
 
     if (!formData.name.trim()) {
@@ -56,7 +58,7 @@ export function ProductForm({ mode, product }: ProductFormProps) {
     }
 
     if (!formData.price || Number.parseFloat(formData.price) <= 0) {
-      errors.price = "Valid price is required"
+      errors.price = "Price must be greater than 0"
     }
 
     if (!formData.categoryId) {
@@ -69,9 +71,9 @@ export function ProductForm({ mode, product }: ProductFormProps) {
 
     setFormErrors(errors)
     return Object.keys(errors).length === 0
-  }
+  }, [formData])
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) {
@@ -109,33 +111,46 @@ export function ProductForm({ mode, product }: ProductFormProps) {
         variant: "destructive",
       })
     }
-  }
+  }, [validateForm, formData, mode, product, dispatch, router, toast, error])
 
-  const handleChange = (field: string, value: string | string[]) => {
+  const handleChange = useCallback((field: string, value: string | string[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     // Clear error for this field
-    if (formErrors[field]) {
-      setFormErrors((prev) => {
-        const newErrors = { ...prev }
-        delete newErrors[field]
-        return newErrors
-      })
-    }
-  }
+    setFormErrors((prev) => {
+      if (!prev[field]) return prev
+      const newErrors = { ...prev }
+      delete newErrors[field]
+      return newErrors
+    })
+  }, [])
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+      <AnimatePresence>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Product Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <motion.div
+        variants={fadeInVariants}
+        initial="hidden"
+        animate="show"
+        transition={{ delay: 0.1 }}
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle>Product Information</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">
               Product Name <span className="text-destructive">*</span>
@@ -208,38 +223,59 @@ export function ProductForm({ mode, product }: ProductFormProps) {
           </div>
         </CardContent>
       </Card>
+      </motion.div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Product Images</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ImageUpload
-            images={formData.images}
-            onChange={(images) => handleChange("images", images)}
-            disabled={loading}
-          />
-          {formErrors.images && <p className="mt-2 text-sm text-destructive">{formErrors.images}</p>}
-        </CardContent>
-      </Card>
+      <motion.div
+        variants={fadeInVariants}
+        initial="hidden"
+        animate="show"
+        transition={{ delay: 0.2 }}
+      >
+        <Card>
+          <CardHeader>
+            <CardTitle>Product Images</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ImageUpload
+              images={formData.images}
+              onChange={(images) => handleChange("images", images)}
+              disabled={loading}
+            />
+            {formErrors.images && <p className="mt-2 text-sm text-destructive">{formErrors.images}</p>}
+          </CardContent>
+        </Card>
+      </motion.div>
 
-      <div className="flex gap-4">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={loading}>
-          Cancel
-        </Button>
-        <Button type="submit" disabled={loading}>
-          {loading ? (
-            <>
-              <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-              Saving...
-            </>
-          ) : mode === "create" ? (
-            "Create Product"
-          ) : (
-            "Update Product"
-          )}
-        </Button>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="flex flex-col gap-3 sm:flex-row sm:gap-4"
+      >
+        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Button type="button" variant="outline" onClick={() => router.back()} disabled={loading} className="w-full sm:w-auto">
+            Cancel
+          </Button>
+        </motion.div>
+        <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? (
+              <>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="mr-2 h-4 w-4 rounded-full border-2 border-primary-foreground border-t-transparent"
+                />
+                Saving...
+              </>
+            ) : mode === "create" ? (
+              "Create Product"
+            ) : (
+              "Update Product"
+            )}
+          </Button>
+        </motion.div>
+      </motion.div>
     </form>
   )
 }

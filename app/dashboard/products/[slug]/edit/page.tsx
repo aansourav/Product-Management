@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { AnimatePresence, motion } from "motion/react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks"
 import { fetchProductBySlug, clearCurrentProduct } from "@/lib/store/slices/products-slice"
 import { ProductForm } from "@/components/products/product-form"
@@ -9,6 +10,7 @@ import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { pageVariants } from "@/lib/animations"
 
 export default function EditProductPage() {
   const params = useParams()
@@ -29,45 +31,98 @@ export default function EditProductPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8"
+      >
         <div className="flex min-h-[400px] items-center justify-center">
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center gap-2"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+              className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent"
+            />
             <p className="text-muted-foreground">Loading product...</p>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     )
   }
 
   if (error || !currentProduct) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-        <Alert variant="destructive" className="mb-6">
-          <AlertDescription>{error || "Product not found"}</AlertDescription>
-        </Alert>
-        <Button onClick={() => router.push("/dashboard")} className="gap-2">
-          <ArrowLeft className="h-4 w-4" />
-          Back to Products
-        </Button>
-      </div>
+      <motion.div
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error || "Product not found"}</AlertDescription>
+          </Alert>
+          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+            <Button onClick={() => router.push("/dashboard")} className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Products
+            </Button>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     )
   }
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-6">
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="container mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8"
+    >
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.3 }}
+        className="mb-6"
+      >
         <Link href="/dashboard">
-          <Button variant="ghost" size="sm" className="mb-4 gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Products
-          </Button>
+          <motion.div whileHover={{ x: -5 }} whileTap={{ scale: 0.95 }}>
+            <Button variant="ghost" size="sm" className="mb-4 gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Back to Products</span>
+              <span className="sm:hidden">Back</span>
+            </Button>
+          </motion.div>
         </Link>
-        <h1 className="text-balance text-3xl font-bold tracking-tight">Edit Product</h1>
-        <p className="text-pretty text-muted-foreground">Update product information</p>
-      </div>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="text-balance text-2xl font-bold tracking-tight sm:text-3xl"
+        >
+          Edit Product
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="text-pretty text-muted-foreground mt-1"
+        >
+          Update product information
+        </motion.p>
+      </motion.div>
 
       <ProductForm mode="edit" product={currentProduct} />
-    </div>
+    </motion.div>
   )
 }
