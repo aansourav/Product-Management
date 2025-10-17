@@ -17,7 +17,7 @@ export default function DashboardLoading() {
 
         {/* Loading Text */}
         <div className="text-center space-y-2">
-          <p className="font-semibold text-foreground">Loading Dashboard...</p>
+          <p className="font-semibold text-foreground">Loading...</p>
           <p className="text-sm text-muted-foreground">Please wait</p>
         </div>
 
