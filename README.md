@@ -121,7 +121,7 @@ Email: Enter any valid email address to authenticate
 - [x] **Date Formatting** - Human-readable date displays
 - [x] **Category Badges** - Visual category identification
 - [x] **Action Menus** - Quick access to edit/delete actions
-- [x] **Keyboard Shortcuts** - Fast navigation for power users
+- [x] **Keyboard Shortcuts** - Fast navigation for power users (Cmd/Ctrl + K for search)
 
 ## 🛠️ Tech Stack
 
@@ -418,6 +418,7 @@ product-management-app/
 │
 ├── 📁 hooks/                           # Custom React hooks
 │   ├── use-debounce.ts               # Debounce hook
+│   ├── use-keyboard-shortcuts.ts     # Keyboard shortcuts hook
 │   ├── use-mobile.ts                 # Mobile detection hook
 │   └── use-toast.ts                  # Toast hook
 │
@@ -621,6 +622,52 @@ product-management-app/
 - Better user experience (no typing lag)
 - Lower server load
 - Faster perceived performance
+
+---
+
+### ⌨️ Keyboard Shortcuts
+
+**Available Shortcuts:**
+
+| Shortcut               | Action       | Description                                    |
+| ---------------------- | ------------ | ---------------------------------------------- |
+| `Cmd + K` / `Ctrl + K` | Focus Search | Instantly focus the search input from anywhere |
+
+**How It Works:**
+
+```typescript
+// Custom hook: hooks/use-keyboard-shortcuts.ts
+// Implementation: app/dashboard/page.tsx
+```
+
+**Features:**
+
+- **Cross-platform Support:** Automatically detects OS (⌘ for Mac, Ctrl for Windows/Linux)
+- **Visual Indicators:** Keyboard shortcut badges displayed in the UI
+- **Non-intrusive:** Works globally without interfering with form inputs
+- **Accessible:** Prevents default browser behavior for custom shortcuts
+- **Extensible:** Easy to add new shortcuts using the reusable hook
+
+**Implementation Example:**
+
+```typescript
+useKeyboardShortcuts([
+  {
+    key: "k",
+    ctrlKey: true,
+    metaKey: true,
+    callback: () => searchInputRef.current?.focus(),
+    preventDefault: true,
+  },
+]);
+```
+
+**Benefits:**
+
+- Improved productivity for power users
+- Faster navigation without mouse
+- Industry-standard shortcuts
+- Better accessibility
 
 ---
 

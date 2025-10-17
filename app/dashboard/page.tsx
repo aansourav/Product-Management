@@ -8,6 +8,7 @@ import { ProductsPagination } from "@/components/dashboard/products-pagination";
 import { ProductsFilter } from "@/components/products/products-filter";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { pageVariants } from "@/lib/animations";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { fetchCategories } from "@/lib/store/slices/categories-slice";
@@ -18,10 +19,12 @@ import {
   setSearchQuery,
 } from "@/lib/store/slices/products-slice";
 import { AnimatePresence, motion } from "motion/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   const {
     items: products,
     loading,
@@ -36,6 +39,19 @@ export default function DashboardPage() {
   // Debounce the search input for real-time search
   const debouncedSearch = useDebounce(localSearch, 400);
   const isSearching = debouncedSearch !== localSearch && !!localSearch;
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      key: "k",
+      ctrlKey: true,
+      metaKey: true,
+      callback: () => {
+        searchInputRef.current?.focus();
+      },
+      preventDefault: true,
+    },
+  ]);
 
   // Fetch initial data
   useEffect(() => {
@@ -139,6 +155,7 @@ export default function DashboardPage() {
       >
         <div className="flex flex-1 gap-2">
           <DashboardSearch
+            ref={searchInputRef}
             localSearch={localSearch}
             onSearchChange={setLocalSearch}
             onClearSearch={handleClearSearch}
