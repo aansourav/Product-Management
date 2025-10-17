@@ -18,6 +18,7 @@
     "@vercel/analytics": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "formik": "^2.4.6",
     "lucide-react": "^0.454.0",
     "motion": "^12.23.24",
     "next": "15.2.4",
@@ -27,7 +28,8 @@
     "redux": "latest",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
-    "tw-animate-css": "latest"
+    "tw-animate-css": "latest",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.9",

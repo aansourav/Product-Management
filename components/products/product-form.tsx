@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { ImageUpload } from "@/components/products/image-upload";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -25,140 +23,188 @@ import {
   updateProduct,
 } from "@/lib/store/slices/products-slice";
 import type { CreateProductDto, Product } from "@/lib/types/product";
+import { useFormik } from "formik";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
+import * as Yup from "yup";
 
 interface ProductFormProps {
   mode: "create" | "edit";
   product?: Product;
 }
 
+// Validation Schema using Yup
+const productValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .trim()
+    .required("Product name is required")
+    .min(3, "Product name must be at least 3 characters")
+    .max(100, "Product name must not exceed 100 characters"),
+  description: Yup.string()
+    .trim()
+    .required("Description is required")
+    .min(10, "Description must be at least 10 characters")
+    .max(1000, "Description must not exceed 1000 characters"),
+  price: Yup.number()
+    .required("Price is required")
+    .positive("Price must be greater than 0")
+    .min(0.01, "Price must be at least $0.01")
+    .max(999999.99, "Price must not exceed $999,999.99")
+    .test(
+      "decimal-places",
+      "Price can have at most 2 decimal places",
+      (value) => {
+        if (value === undefined || value === null) return true;
+        return /^\d+(\.\d{1,2})?$/.test(value.toString());
+      }
+    ),
+  categoryId: Yup.string()
+    .required("Category is required")
+    .min(1, "Category is required"),
+  images: Yup.array()
+    .of(
+      Yup.string()
+        .required("Image URL is required")
+        .test("valid-image-url", "Invalid image URL", (value) => {
+          if (!value) return false;
+          // Accept http/https URLs or data URIs or any path starting with /
+          return (
+            value.startsWith("http://") ||
+            value.startsWith("https://") ||
+            value.startsWith("data:image/") ||
+            value.startsWith("/") ||
+            value.length > 0 // Accept any non-empty string as fallback
+          );
+        })
+    )
+    .min(1, "At least one image is required")
+    .max(5, "Maximum 5 images allowed")
+    .required("At least one image is required"),
+});
+
+// Form values type
+interface ProductFormValues {
+  name: string;
+  description: string;
+  price: number | string;
+  categoryId: string;
+  images: string[];
+}
+
 export function ProductForm({ mode, product }: ProductFormProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
-  const { loading, error } = useAppSelector((state) => state.products);
+  const { error: reduxError } = useAppSelector((state) => state.products);
   const { items: categories } = useAppSelector((state) => state.categories);
 
-  const [formData, setFormData] = useState({
-    name: product?.name || "",
-    description: product?.description || "",
-    price: product?.price?.toString() || "",
-    categoryId: product?.category.id || "",
-    images: product?.images || [],
-  });
-
-  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-
+  // Fetch categories on mount
   useEffect(() => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  const validateForm = useCallback(() => {
-    const errors: Record<string, string> = {};
-
-    if (!formData.name.trim()) {
-      errors.name = "Product name is required";
-    }
-
-    if (!formData.description.trim()) {
-      errors.description = "Description is required";
-    }
-
-    if (!formData.price || Number.parseFloat(formData.price) <= 0) {
-      errors.price = "Price must be greater than 0";
-    }
-
-    if (!formData.categoryId) {
-      errors.categoryId = "Category is required";
-    }
-
-    if (formData.images.length === 0) {
-      errors.images = "At least one image is required";
-    }
-
-    setFormErrors(errors);
-    return Object.keys(errors).length === 0;
-  }, [formData]);
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-
-      if (!validateForm()) {
-        return;
-      }
-
-      const productData: CreateProductDto = {
-        name: formData.name,
-        description: formData.description,
-        price: Number.parseFloat(formData.price),
-        categoryId: formData.categoryId,
-        images: formData.images,
-      };
-
+  // Initialize Formik
+  const formik = useFormik<ProductFormValues>({
+    initialValues: {
+      name: product?.name || "",
+      description: product?.description || "",
+      price: product?.price || "",
+      categoryId: product?.category.id || "",
+      images: product?.images || [],
+    },
+    validationSchema: productValidationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
+    validateOnMount: mode === "edit", // Validate on mount for edit mode
+    enableReinitialize: mode === "edit", // Allow form to reinitialize when editing
+    onSubmit: async (values, { setSubmitting, setFieldError }) => {
       try {
+        const productData: CreateProductDto = {
+          name: values.name.trim(),
+          description: values.description.trim(),
+          price:
+            typeof values.price === "string"
+              ? parseFloat(values.price)
+              : values.price,
+          categoryId: values.categoryId,
+          images: values.images,
+        };
+
         if (mode === "create") {
           const createdProduct = await dispatch(
             createProduct(productData)
           ).unwrap();
+
           toast({
             title: "Success",
             description: "Product created successfully",
           });
+
           router.push(`/dashboard/products/${createdProduct.slug}`);
         } else if (product) {
           const updatedProduct = await dispatch(
             updateProduct({ id: product.id, data: productData })
           ).unwrap();
+
           toast({
             title: "Success",
             description: "Product updated successfully",
           });
+
           router.push(`/dashboard/products/${updatedProduct.slug}`);
         }
-      } catch (err) {
+      } catch (err: any) {
+        // Handle specific field errors if returned from API
+        if (err?.fieldErrors) {
+          Object.entries(err.fieldErrors).forEach(([field, message]) => {
+            setFieldError(field, message as string);
+          });
+        }
+
         toast({
           title: "Error",
-          description: error || "Failed to save product",
+          description: err?.message || reduxError || "Failed to save product",
           variant: "destructive",
         });
+      } finally {
+        setSubmitting(false);
       }
     },
-    [validateForm, formData, mode, product, dispatch, router, toast, error]
-  );
+  });
 
-  const handleChange = useCallback(
-    (field: string, value: string | string[]) => {
-      setFormData((prev) => ({ ...prev, [field]: value }));
-      // Clear error for this field
-      setFormErrors((prev) => {
-        if (!prev[field]) return prev;
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
-    },
-    []
-  );
+  // Helper to get error message for a field
+  const getFieldError = (
+    fieldName: keyof ProductFormValues
+  ): string | undefined => {
+    return formik.touched[fieldName] && formik.errors[fieldName]
+      ? String(formik.errors[fieldName])
+      : undefined;
+  };
+
+  // Helper to check if field has error
+  const hasFieldError = (fieldName: keyof ProductFormValues): boolean => {
+    return Boolean(formik.touched[fieldName] && formik.errors[fieldName]);
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={formik.handleSubmit} className="space-y-6" noValidate>
+      {/* Global Error Alert */}
       <AnimatePresence>
-        {error && (
+        {reduxError && !formik.isSubmitting && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
           >
             <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription>{reduxError}</AlertDescription>
             </Alert>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Product Information Card */}
       <motion.div
         variants={fadeInVariants}
         initial="hidden"
@@ -170,71 +216,144 @@ export function ProductForm({ mode, product }: ProductFormProps) {
             <CardTitle>Product Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Product Name */}
             <div className="space-y-2">
               <Label htmlFor="name">
                 Product Name <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="name"
-                value={formData.name}
-                onChange={(e) => handleChange("name", e.target.value)}
+                name="name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 placeholder="Enter product name"
-                disabled={loading}
+                disabled={formik.isSubmitting}
+                className={hasFieldError("name") ? "border-destructive" : ""}
+                aria-invalid={hasFieldError("name")}
+                aria-describedby={
+                  hasFieldError("name") ? "name-error" : undefined
+                }
               />
-              {formErrors.name && (
-                <p className="text-sm text-destructive">{formErrors.name}</p>
-              )}
+              <AnimatePresence mode="wait">
+                {getFieldError("name") && (
+                  <motion.p
+                    id="name-error"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="text-sm text-destructive"
+                    role="alert"
+                  >
+                    {getFieldError("name")}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </div>
 
+            {/* Description */}
             <div className="space-y-2">
               <Label htmlFor="description">
                 Description <span className="text-destructive">*</span>
               </Label>
               <Textarea
                 id="description"
-                value={formData.description}
-                onChange={(e) => handleChange("description", e.target.value)}
+                name="description"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
                 placeholder="Enter product description"
                 rows={4}
-                disabled={loading}
+                disabled={formik.isSubmitting}
+                className={
+                  hasFieldError("description") ? "border-destructive" : ""
+                }
+                aria-invalid={hasFieldError("description")}
+                aria-describedby={
+                  hasFieldError("description") ? "description-error" : undefined
+                }
               />
-              {formErrors.description && (
-                <p className="text-sm text-destructive">
-                  {formErrors.description}
-                </p>
-              )}
+              <AnimatePresence mode="wait">
+                {getFieldError("description") && (
+                  <motion.p
+                    id="description-error"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="text-sm text-destructive"
+                    role="alert"
+                  >
+                    {getFieldError("description")}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </div>
 
+            {/* Price and Category */}
             <div className="grid gap-4 sm:grid-cols-2">
+              {/* Price */}
               <div className="space-y-2">
                 <Label htmlFor="price">
                   Price <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="price"
+                  name="price"
                   type="number"
                   step="0.01"
                   min="0"
-                  value={formData.price}
-                  onChange={(e) => handleChange("price", e.target.value)}
+                  value={formik.values.price}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   placeholder="0.00"
-                  disabled={loading}
+                  disabled={formik.isSubmitting}
+                  className={hasFieldError("price") ? "border-destructive" : ""}
+                  aria-invalid={hasFieldError("price")}
+                  aria-describedby={
+                    hasFieldError("price") ? "price-error" : undefined
+                  }
                 />
-                {formErrors.price && (
-                  <p className="text-sm text-destructive">{formErrors.price}</p>
-                )}
+                <AnimatePresence mode="wait">
+                  {getFieldError("price") && (
+                    <motion.p
+                      id="price-error"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="text-sm text-destructive"
+                      role="alert"
+                    >
+                      {getFieldError("price")}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
 
+              {/* Category */}
               <div className="space-y-2">
                 <Label htmlFor="category">
                   Category <span className="text-destructive">*</span>
                 </Label>
                 <Select
-                  value={formData.categoryId}
-                  onValueChange={(value) => handleChange("categoryId", value)}
-                  disabled={loading}
+                  value={formik.values.categoryId}
+                  onValueChange={async (value) => {
+                    // Set value first, then mark as touched to ensure proper validation order
+                    await formik.setFieldValue("categoryId", value, true);
+                    formik.setFieldTouched("categoryId", true, false);
+                  }}
+                  disabled={formik.isSubmitting}
                 >
-                  <SelectTrigger id="category">
+                  <SelectTrigger
+                    id="category"
+                    className={
+                      hasFieldError("categoryId") ? "border-destructive" : ""
+                    }
+                    aria-invalid={hasFieldError("categoryId")}
+                    aria-describedby={
+                      hasFieldError("categoryId") ? "category-error" : undefined
+                    }
+                    onBlur={() => formik.setFieldTouched("categoryId", true)}
+                  >
                     <SelectValue placeholder="Select a category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -245,17 +364,27 @@ export function ProductForm({ mode, product }: ProductFormProps) {
                     ))}
                   </SelectContent>
                 </Select>
-                {formErrors.categoryId && (
-                  <p className="text-sm text-destructive">
-                    {formErrors.categoryId}
-                  </p>
-                )}
+                <AnimatePresence mode="wait">
+                  {getFieldError("categoryId") && (
+                    <motion.p
+                      id="category-error"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="text-sm text-destructive"
+                      role="alert"
+                    >
+                      {getFieldError("categoryId")}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </CardContent>
         </Card>
       </motion.div>
 
+      {/* Product Images Card */}
       <motion.div
         variants={fadeInVariants}
         initial="hidden"
@@ -268,19 +397,32 @@ export function ProductForm({ mode, product }: ProductFormProps) {
           </CardHeader>
           <CardContent>
             <ImageUpload
-              images={formData.images}
-              onChange={(images) => handleChange("images", images)}
-              disabled={loading}
+              images={formik.values.images}
+              onChange={async (images) => {
+                // Set value first, then mark as touched to ensure proper validation order
+                await formik.setFieldValue("images", images, true);
+                formik.setFieldTouched("images", true, false);
+              }}
+              disabled={formik.isSubmitting}
             />
-            {formErrors.images && (
-              <p className="mt-2 text-sm text-destructive">
-                {formErrors.images}
-              </p>
-            )}
+            <AnimatePresence mode="wait">
+              {getFieldError("images") && (
+                <motion.p
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-2 text-sm text-destructive"
+                  role="alert"
+                >
+                  {getFieldError("images")}
+                </motion.p>
+              )}
+            </AnimatePresence>
           </CardContent>
         </Card>
       </motion.div>
 
+      {/* Action Buttons */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -292,7 +434,7 @@ export function ProductForm({ mode, product }: ProductFormProps) {
             type="button"
             variant="outline"
             onClick={() => router.back()}
-            disabled={loading}
+            disabled={formik.isSubmitting}
             className="w-full sm:w-auto"
           >
             Cancel
@@ -300,11 +442,15 @@ export function ProductForm({ mode, product }: ProductFormProps) {
         </motion.div>
         <motion.div
           className="flex-1"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: formik.isSubmitting ? 1 : 1.02 }}
+          whileTap={{ scale: formik.isSubmitting ? 1 : 0.98 }}
         >
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? (
+          <Button
+            type="submit"
+            disabled={formik.isSubmitting}
+            className="w-full"
+          >
+            {formik.isSubmitting ? (
               <>
                 <motion.div
                   animate={{ rotate: 360 }}
