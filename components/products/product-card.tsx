@@ -155,7 +155,7 @@ export const ProductCard = memo(function ProductCard({
           </motion.p>
         </CardContent>
 
-        <CardFooter className="flex gap-2 border-t p-3">
+        <CardFooter className="flex gap-2 border-t p-2 sm:p-3">
           <motion.div
             className="flex-1"
             whileHover={{ scale: 1.05 }}
