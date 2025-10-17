@@ -3,12 +3,15 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "motion/react";
+import { memo } from "react";
 
 interface ProductCardSkeletonProps {
   index?: number;
 }
 
-export function ProductCardSkeleton({ index = 0 }: ProductCardSkeletonProps) {
+export const ProductCardSkeleton = memo(function ProductCardSkeleton({
+  index = 0,
+}: ProductCardSkeletonProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -32,4 +35,4 @@ export function ProductCardSkeleton({ index = 0 }: ProductCardSkeletonProps) {
       </Card>
     </motion.div>
   );
-}
+});

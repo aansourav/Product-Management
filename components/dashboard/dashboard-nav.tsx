@@ -57,7 +57,7 @@ export function DashboardNav() {
                 <Package className="h-5 w-5 text-primary-foreground" />
               </motion.div>
               <span className="hidden text-lg font-semibold sm:inline">
-                Admin Dashboard
+                Product Management
               </span>
             </motion.div>
           </Link>

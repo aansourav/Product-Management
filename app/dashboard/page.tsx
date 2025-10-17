@@ -51,18 +51,6 @@ export default function DashboardPage() {
     dispatch(fetchProducts({ offset: 0, limit: 100 }));
   }, [dispatch]);
 
-  // Real-time debounced search
-  useEffect(() => {
-    if (debouncedSearch) {
-      dispatch(setSearchQuery(debouncedSearch));
-      dispatch(searchProducts(debouncedSearch));
-      dispatch(setCurrentPage(1));
-    } else if (searchQuery && !debouncedSearch) {
-      // If search is cleared, reset to all products
-      handleResetSearch();
-    }
-  }, [debouncedSearch]);
-
   const handleCategoryChange = useCallback(
     (categoryId: string) => {
       setSelectedCategory(categoryId);
@@ -102,6 +90,27 @@ export default function DashboardPage() {
   const handleClearSearch = useCallback(() => {
     setLocalSearch("");
   }, []);
+
+  // Real-time debounced search - simplified dependencies
+  useEffect(() => {
+    if (debouncedSearch) {
+      dispatch(setSearchQuery(debouncedSearch));
+      dispatch(searchProducts(debouncedSearch));
+      dispatch(setCurrentPage(1));
+    } else if (searchQuery && !debouncedSearch) {
+      // If search is cleared, reset to all products
+      setLocalSearch("");
+      dispatch(setSearchQuery(""));
+      dispatch(setCurrentPage(1));
+      if (selectedCategory) {
+        dispatch(
+          fetchProducts({ offset: 0, limit: 100, categoryId: selectedCategory })
+        );
+      } else {
+        dispatch(fetchProducts({ offset: 0, limit: 100 }));
+      }
+    }
+  }, [debouncedSearch]); // Intentionally minimal dependencies to avoid loops
 
   // Memoized pagination calculations
   const { totalPages, paginatedProducts } = useMemo(() => {

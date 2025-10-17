@@ -9,33 +9,60 @@ import { Edit, Eye } from "lucide-react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 
 interface ProductCardProps {
   product: Product;
   index?: number;
 }
 
-export function ProductCard({ product, index = 0 }: ProductCardProps) {
+// Memoized component for better performance
+export const ProductCard = memo(function ProductCard({
+  product,
+  index = 0,
+}: ProductCardProps) {
   const router = useRouter();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  const formatPrice = (price: number) => {
+  // Memoize formatted price
+  const formattedPrice = useMemo(() => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(price);
-  };
+    }).format(product.price);
+  }, [product.price]);
 
-  const isValidImageUrl = (url: string) => {
-    // Check if it's a valid HTTP/HTTPS URL or starts with /
+  // Memoize image validity check
+  const isValidImage = useMemo(() => {
+    if (!product.images || product.images.length === 0) return false;
+    const url = product.images[0];
+    // Check if url is not null/undefined before calling startsWith
+    if (!url) return false;
     return (
       url.startsWith("http://") ||
       url.startsWith("https://") ||
       url.startsWith("/")
     );
-  };
+  }, [product.images]);
+
+  // Memoize navigation handlers
+  const handleViewClick = useCallback(() => {
+    router.push(`/dashboard/products/${product.slug}`);
+  }, [router, product.slug]);
+
+  const handleEditClick = useCallback(() => {
+    router.push(`/dashboard/products/${product.slug}/edit`);
+  }, [router, product.slug]);
+
+  const handleImageLoad = useCallback(() => {
+    setImageLoaded(true);
+  }, []);
+
+  const handleImageError = useCallback(() => {
+    setImageError(true);
+    setImageLoaded(true);
+  }, []);
 
   return (
     <motion.div
@@ -49,10 +76,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
     >
       <Card className="group flex h-full flex-col overflow-hidden border-border/50 transition-colors hover:border-border p-0">
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
-          {product.images &&
-          product.images.length > 0 &&
-          isValidImageUrl(product.images[0]) &&
-          !imageError ? (
+          {isValidImage && !imageError ? (
             <>
               {!imageLoaded && (
                 <div className="absolute inset-0 flex items-center justify-center bg-muted">
@@ -74,11 +98,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  onLoad={() => setImageLoaded(true)}
-                  onError={() => {
-                    setImageError(true);
-                    setImageLoaded(true);
-                  }}
+                  onLoad={handleImageLoad}
+                  onError={handleImageError}
                   priority={index < 4}
                 />
               </motion.div>
@@ -130,7 +151,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             transition={{ delay: 0.2, type: "spring" }}
             className="text-base font-bold text-primary"
           >
-            {formatPrice(product.price)}
+            {formattedPrice}
           </motion.p>
         </CardContent>
 
@@ -144,7 +165,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               variant="outline"
               size="sm"
               className="w-full gap-1.5 text-xs bg-transparent"
-              onClick={() => router.push(`/dashboard/products/${product.slug}`)}
+              onClick={handleViewClick}
             >
               <Eye className="h-3.5 w-3.5" />
               View
@@ -159,9 +180,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               variant="default"
               size="sm"
               className="w-full gap-1.5 text-xs"
-              onClick={() =>
-                router.push(`/dashboard/products/${product.slug}/edit`)
-              }
+              onClick={handleEditClick}
             >
               <Edit className="h-3.5 w-3.5" />
               Edit
@@ -171,4 +190,4 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       </Card>
     </motion.div>
   );
-}
+});
